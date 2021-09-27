@@ -16,7 +16,7 @@ function Register({ authenticated }) {
     password: yup
       .string()
       .required("Campo Obrigatório!")
-      .min(8, "Mínimo oito (8) caracteres"),
+      .min(6, "Mínimo seis (6) caracteres"),
     confirmPassword: yup
       .string()
       .required("Campo Obrigatório!")
