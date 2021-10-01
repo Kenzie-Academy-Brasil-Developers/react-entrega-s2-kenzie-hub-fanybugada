@@ -10,19 +10,19 @@ function Welcome({ authenticated }) {
       <div>
         <h1> Welcome to KenzieHub! </h1>
       </div>
-      <div>
+      <div className="divWelcomeButtons">
         <Button
-          type="submit"
           variant="contained"
           color="primary"
+          size="large"
           onClick={() => history.push("/UserLogin")}
         >
           Log In
         </Button>
         <Button
-          type="submit"
           variant="contained"
           color="primary"
+          size="large"
           onClick={() => history.push("/Register")}
         >
           Sign In

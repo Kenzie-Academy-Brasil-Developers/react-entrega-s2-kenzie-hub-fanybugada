@@ -4,6 +4,7 @@ import { useHistory, Redirect } from "react-router";
 import * as yup from "yup";
 import api from "../../Services/api";
 import { TextField, Button } from "@material-ui/core";
+import "./style.css";
 
 function UserLogin({ authenticated, setAuthenticated }) {
   const schema = yup.object().shape({
@@ -42,7 +43,7 @@ function UserLogin({ authenticated, setAuthenticated }) {
   };
 
   return (
-    <>
+    <div className="loginContainer">
       <h1>Log In</h1>
       <form onSubmit={handleSubmit(handleButtonLogin)}>
         <div>
@@ -80,7 +81,7 @@ function UserLogin({ authenticated, setAuthenticated }) {
       <button onClick={() => <Redirect to="/Register" />}>
         Not a member yet? Sign in
       </button>
-    </>
+    </div>
   );
 }
 export default UserLogin;

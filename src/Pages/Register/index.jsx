@@ -4,6 +4,7 @@ import { useHistory, Redirect } from "react-router";
 import * as yup from "yup";
 import api from "../../Services/api";
 import { TextField, Button } from "@material-ui/core";
+import "./style.css";
 
 function Register({ authenticated }) {
   const schema = yup.object().shape({
@@ -55,7 +56,7 @@ function Register({ authenticated }) {
   };
 
   return (
-    <>
+    <div className="registerContainer">
       <h1>KenzieHub</h1>
       <form onSubmit={handleSubmit(handleRegisterForm)}>
         <div>
@@ -156,7 +157,7 @@ function Register({ authenticated }) {
         </div>
       </form>
       <button onClick={() => loginPage()}>Already a member? Log in</button>
-    </>
+    </div>
   );
 }
 export default Register;

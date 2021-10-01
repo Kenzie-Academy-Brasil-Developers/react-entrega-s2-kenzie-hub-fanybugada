@@ -6,6 +6,7 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import { Button } from "@material-ui/core";
+import "./style.css";
 
 function UserProfile({ authenticated, setAuthenticated }) {
   const [token] = useState(
@@ -58,7 +59,7 @@ function UserProfile({ authenticated, setAuthenticated }) {
   };
 
   return (
-    <>
+    <div className="profileContainer">
       <button onClick={() => logout()}>Logout</button>
 
       <div>
@@ -91,7 +92,7 @@ function UserProfile({ authenticated, setAuthenticated }) {
           Create
         </Button>
       </form>
-    </>
+    </div>
   );
 }
 export default UserProfile;
