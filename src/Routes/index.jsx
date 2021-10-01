@@ -3,17 +3,17 @@ import Welcome from "../Pages/Welcome";
 import UserLogin from "../Pages/UserLogin";
 import Register from "../Pages/Register";
 import UserProfile from "../Pages/UserProfile";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 function Routes() {
   const [authenticated, setAuthenticated] = useState(false);
 
-  useEffect(() => {
-    const token = JSON.parse(localStorage.getItem("@Kenziehub:token"));
-    if (token) {
-      setAuthenticated(true);
-    }
-  }, [authenticated]);
+  // useEffect(() => {
+  //   const token = JSON.parse(localStorage.getItem("@Kenziehub:token"));
+  //   if (token) {
+  //     setAuthenticated(true);
+  //   }
+  // }, [authenticated]);
 
   return (
     <Switch>
@@ -30,7 +30,10 @@ function Routes() {
         <Register authenticated={authenticated} />
       </Route>
       <Route exact path="/UserProfile">
-        <UserProfile authenticated={authenticated} />
+        <UserProfile
+          authenticated={authenticated}
+          setAuthenticated={setAuthenticated}
+        />
       </Route>
     </Switch>
   );

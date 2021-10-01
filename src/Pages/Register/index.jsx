@@ -6,11 +6,9 @@ import api from "../../Services/api";
 import { TextField, Button } from "@material-ui/core";
 
 function Register({ authenticated }) {
-  const history = useHistory();
-
   const schema = yup.object().shape({
     name: yup.string().required("Campo Obrigatório!"),
-    email: yup.string().required("Campo Obrigatório!").email("Email Inválido!"),
+    email: yup.string().required("Campo Obrigatório!").email(),
     bio: yup.string().required("Campo Obrigatório!"),
     contact: yup.string().required("Campo Obrigatório!"),
     password: yup
@@ -30,19 +28,35 @@ function Register({ authenticated }) {
     formState: { errors },
   } = useForm({ resolver: yupResolver(schema) });
 
+  const history = useHistory();
+
   if (authenticated) {
     return <Redirect to="/UserProfile" />;
   }
 
-  const handleRegisterForm = (user) => {
+  const handleRegisterForm = ({
+    name,
+    email,
+    bio,
+    contact,
+    password,
+    course_module,
+  }) => {
+    const userData = { name, email, bio, contact, password, course_module };
+
     api
-      .post("/users", user)
+      .post("/users", userData)
       .then((_) => history.push("/UserLogin"))
       .catch((err) => console.log(err));
   };
 
+  const loginPage = () => {
+    <Redirect to="/UserLogin" />;
+  };
+
   return (
     <>
+      <h1>KenzieHub</h1>
       <form onSubmit={handleSubmit(handleRegisterForm)}>
         <div>
           <TextField
@@ -141,6 +155,7 @@ function Register({ authenticated }) {
           </Button>
         </div>
       </form>
+      <button onClick={() => loginPage()}>Already a member? Log in</button>
     </>
   );
 }

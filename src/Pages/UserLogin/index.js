@@ -6,8 +6,6 @@ import api from "../../Services/api";
 import { TextField, Button } from "@material-ui/core";
 
 function UserLogin({ authenticated, setAuthenticated }) {
-  const history = useHistory();
-
   const schema = yup.object().shape({
     email: yup.string().required("Campo Obrigatório!").email("Email Inválido!"),
     password: yup
@@ -21,6 +19,8 @@ function UserLogin({ authenticated, setAuthenticated }) {
     handleSubmit,
     formState: { errors },
   } = useForm({ resolver: yupResolver(schema) });
+
+  const history = useHistory();
 
   if (authenticated) {
     return <Redirect to="/UserProfile" />;
@@ -43,6 +43,7 @@ function UserLogin({ authenticated, setAuthenticated }) {
 
   return (
     <>
+      <h1>Log In</h1>
       <form onSubmit={handleSubmit(handleButtonLogin)}>
         <div>
           <TextField
@@ -72,10 +73,13 @@ function UserLogin({ authenticated, setAuthenticated }) {
 
         <div>
           <Button type="submit" variant="contained" color="primary">
-            Login!
+            Log in
           </Button>
         </div>
       </form>
+      <button onClick={() => <Redirect to="/Register" />}>
+        Not a member yet? Sign in
+      </button>
     </>
   );
 }
