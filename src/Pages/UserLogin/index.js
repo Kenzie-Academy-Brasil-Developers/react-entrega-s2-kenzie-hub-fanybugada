@@ -5,6 +5,7 @@ import * as yup from "yup";
 import api from "../../Services/api";
 import { TextField, Button } from "@material-ui/core";
 import "./style.css";
+import { useState } from "react";
 
 function UserLogin({ authenticated, setAuthenticated }) {
   const schema = yup.object().shape({
@@ -13,6 +14,10 @@ function UserLogin({ authenticated, setAuthenticated }) {
       .string()
       .required("Campo Obrigatório!")
       .min(6, "Mínimo seis (6) caracteres"),
+  });
+
+  const [token, setToken] = useState(() => {
+    return localStorage.getItem("token") || "";
   });
 
   const {
@@ -28,14 +33,24 @@ function UserLogin({ authenticated, setAuthenticated }) {
   }
 
   const handleButtonLogin = (data) => {
-    api
-      .post("/sessions", data)
-      .then((res) => {
-        const { token } = res.data;
-        const { id } = res.data.user;
+    const userData = { email: data.email, password: data.password };
 
-        localStorage.setItem("@Kenziehub:token", JSON.stringify(token));
-        localStorage.setItem("@Kenziehub:id", JSON.stringify(id));
+    api
+      .post("/sessions", userData)
+      .then((res) => {
+        // const { token } = res.data.token;
+
+        localStorage.clear();
+        localStorage.setItem(
+          "token",
+          JSON.parse(JSON.stringify(res.data.token))
+        );
+
+        localStorage.setItem(
+          "id",
+          JSON.parse(JSON.stringify(res.data.user.id))
+        );
+
         setAuthenticated(true);
         return history.push("/UserProfile");
       })
@@ -78,9 +93,11 @@ function UserLogin({ authenticated, setAuthenticated }) {
           </Button>
         </div>
       </form>
-      <button onClick={() => <Redirect to="/Register" />}>
-        Not a member yet? Sign in
-      </button>
+      <div>
+        <button onClick={() => history.push("/Register")}>
+          Not a member yet? Sign in
+        </button>
+      </div>
     </div>
   );
 }

@@ -5,6 +5,7 @@ import * as yup from "yup";
 import api from "../../Services/api";
 import { TextField, Button } from "@material-ui/core";
 import "./style.css";
+import { useState } from "react";
 
 function Register({ authenticated }) {
   const schema = yup.object().shape({
@@ -21,6 +22,10 @@ function Register({ authenticated }) {
       .required("Campo Obrigatório!")
       .oneOf([yup.ref("password")], "Senhas diferentes!"),
     course_module: yup.string().required("Campo Obrigatório!"),
+  });
+
+  const [token, setToken] = useState(() => {
+    return localStorage.getItem("token") || "";
   });
 
   const {
@@ -43,16 +48,21 @@ function Register({ authenticated }) {
     password,
     course_module,
   }) => {
-    const userData = { name, email, bio, contact, password, course_module };
+    const userData = {
+      name: name,
+      email: email,
+      bio: bio,
+      contact: contact,
+      password: password,
+      course_module: course_module,
+    };
 
     api
-      .post("/users", userData)
-      .then((_) => history.push("/UserLogin"))
+      .post("/users", userData, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .then((res) => history.push("/UserLogin"))
       .catch((err) => console.log(err));
-  };
-
-  const loginPage = () => {
-    <Redirect to="/UserLogin" />;
   };
 
   return (
@@ -156,7 +166,10 @@ function Register({ authenticated }) {
           </Button>
         </div>
       </form>
-      <button onClick={() => loginPage()}>Already a member? Log in</button>
+
+      <button onClick={() => history.push("/UserLogin")}>
+        Already a member? Log in
+      </button>
     </div>
   );
 }

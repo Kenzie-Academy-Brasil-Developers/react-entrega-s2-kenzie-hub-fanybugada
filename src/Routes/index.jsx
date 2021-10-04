@@ -8,18 +8,8 @@ import { useState } from "react";
 function Routes() {
   const [authenticated, setAuthenticated] = useState(false);
 
-  // useEffect(() => {
-  //   const token = JSON.parse(localStorage.getItem("@Kenziehub:token"));
-  //   if (token) {
-  //     setAuthenticated(true);
-  //   }
-  // }, [authenticated]);
-
   return (
     <Switch>
-      <Route exact path="/">
-        <Welcome authenticated={authenticated} />
-      </Route>
       <Route exact path="/UserLogin">
         <UserLogin
           authenticated={authenticated}
@@ -34,6 +24,9 @@ function Routes() {
           authenticated={authenticated}
           setAuthenticated={setAuthenticated}
         />
+      </Route>
+      <Route exact path="/">
+        <Welcome authenticated={authenticated} />
       </Route>
     </Switch>
   );

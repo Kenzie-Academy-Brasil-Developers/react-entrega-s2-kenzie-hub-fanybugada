@@ -9,25 +9,31 @@ import { Button } from "@material-ui/core";
 import "./style.css";
 
 function UserProfile({ authenticated, setAuthenticated }) {
-  const [token] = useState(
-    JSON.parse(localStorage.getItem("@Kenziehub:token")) || ""
-  );
-  const [userId] = useState(
-    JSON.parse(localStorage.getItem("@Kenziehub:id")) || ""
-  );
-  const [cardsUser, setCardsUser] = useState([]);
+  const [token, setToken] = useState(() => {
+    return localStorage.getItem("token") || "";
+  });
+
+  // const [id] = useState(JSON.parse(localStorage.getItem("id")));
+
+  const [profileUser, setProfileUser] = useState(() => {
+    return localStorage.getItem("user") || "";
+  });
 
   const schema = yup.object().shape({
     title: yup.string().required(),
     status: yup.string().required(),
   });
 
-  const userTechs = () => {
+  // const userId = profileUser._id;
+
+  useEffect(() => {
     api
-      .get(`/users/${userId.id}`)
-      .then((res) => setCardsUser(res.data.techs))
+      .get("/profile", {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .then((res) => setProfileUser(res.data))
       .catch((err) => console.log(err));
-  };
+  }, []);
 
   const {
     register,
@@ -38,16 +44,16 @@ function UserProfile({ authenticated, setAuthenticated }) {
   const handleCardSubmit = ({ title, status }) => {
     const userData = { title: title, status: status };
     api
-      .post("users/techs", userData, {
+      .post("/users/techs", userData, {
         headers: { Authorization: `Bearer ${token}` },
       })
-      .then((res) => setCardsUser(...cardsUser, userData))
+      .then((res) => setProfileUser(...profileUser, res.data.techs))
       .catch((err) => console.log(err));
   };
 
-  useEffect(() => {
-    userTechs();
-  });
+  // useEffect(() => {
+  //   userTechs();
+  // });
 
   if (!authenticated) {
     return <Redirect to="/UserLogin" />;
@@ -57,24 +63,24 @@ function UserProfile({ authenticated, setAuthenticated }) {
     localStorage.clear();
     setAuthenticated(false);
   };
-
+  console.log(profileUser);
   return (
     <div className="profileContainer">
       <button onClick={() => logout()}>Logout</button>
 
       <div>
-        <h1>Welcome, {userId.name}</h1>
+        <h1>Welcome, {profileUser.name}</h1>
         <div>
-          <h4>Email: {userId.email}</h4>
-          <h4>Bio: {userId.bio}</h4>
-          <h4>Contact: {userId.contact}</h4>
-          <h4>Course Module: {userId.course_module}</h4>
+          <h4>Email: {profileUser.email}</h4>
+          <h4>Bio: {profileUser.bio}</h4>
+          <h4>Contact: {profileUser.contact}</h4>
+          <h4>Course Module: {profileUser.course_module}</h4>
         </div>
       </div>
 
       <hr />
 
-      <UserCards cardsUser={cardsUser} />
+      <UserCards profileUser={profileUser} setProfileUser={setProfileUser} />
 
       <form onSubmit={handleSubmit(handleCardSubmit)}>
         <h2>Add New Tech:</h2>
